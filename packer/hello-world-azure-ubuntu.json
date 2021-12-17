@@ -3,7 +3,8 @@
     "client_id":  "{{env `CLIENT_ID`}}",
     "client_secret":  "{{env `CLIENT_SECRET`}}",
     "tenant_id":  "{{env `TENANT_ID`}}",
-    "subscription_id":  "{{env `SUBSCRIPTION_ID`}}"
+    "subscription_id":  "{{env `SUBSCRIPTION_ID`}}",
+    "resource_group_name": "{{env `RESOURCE_GROUP_NAME`}}"
   },
   "builders": [{
     "type": "azure-arm",
@@ -13,7 +14,7 @@
     "tenant_id": "{{user `tenant_id`}}",
     "subscription_id": "{{user `subscription_id`}}",
 
-    "managed_image_resource_group_name": "hello-apps",
+    "managed_image_resource_group_name": "{{user `resource_group_name`}}",
     "managed_image_name": "hello-world",
 
     "os_type": "Linux",
