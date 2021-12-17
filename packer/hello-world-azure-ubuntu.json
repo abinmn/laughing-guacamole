@@ -1,0 +1,44 @@
+{
+  "variables": {
+    "client_id":  "{{env `CLIENT_ID`}}",
+    "client_secret":  "{{env `CLIENT_SECRET`}}",
+    "tenant_id":  "{{env `TENANT_ID`}}",
+    "subscription_id":  "{{env `SUBSCRIPTION_ID`}}"
+  },
+  "builders": [{
+    "type": "azure-arm",
+
+    "client_id": "{{user `client_id`}}",
+    "client_secret": "{{user `client_secret`}}",
+    "tenant_id": "{{user `tenant_id`}}",
+    "subscription_id": "{{user `subscription_id`}}",
+
+    "managed_image_resource_group_name": "hello-apps",
+    "managed_image_name": "hello-world",
+
+    "os_type": "Linux",
+    "image_publisher": "Canonical",
+    "image_offer": "UbuntuServer",
+    "image_sku": "16.04-LTS",
+
+    "azure_tags": {
+      "dept": "Engineering",
+      "task": "Image deployment"
+    },
+
+    "location": "North Europe",
+    "vm_size": "Standard_B1ls"
+  }],
+  "provisioners": [{
+    "execute_command": "chmod +x {{ .Path }}; {{ .Vars }} sudo -E sh '{{ .Path }}'",
+    "inline": [
+      "apt update",
+      "apt upgrade -y",
+      "apt -y install default-jre",
+
+      "/usr/sbin/waagent -force -deprovision+user && export HISTSIZE=0 && sync"
+    ],
+    "inline_shebang": "/bin/sh -x",
+    "type": "shell"
+  }]
+}
