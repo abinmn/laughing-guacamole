@@ -14,3 +14,20 @@ variable "resource_group_location" {
   type    = string
   default = "northeurope"
 }
+
+variable "hello_world_image_name" {
+  type        = string
+  description = "Image name of hello-world web app built with packer"
+  default     = "hello-world"
+}
+
+variable "hello_world_vm_username" {
+    type = string
+    description = "Username for hello_world_vm"
+    sensitive = true
+}
+
+variable "hello_world_vm_ssh_public_key" {
+    type = string
+    description = "Public Key for hello_world_vm"
+}
