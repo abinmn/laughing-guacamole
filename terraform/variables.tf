@@ -22,12 +22,17 @@ variable "hello_world_image_name" {
 }
 
 variable "hello_world_vm_username" {
-    type = string
-    description = "Username for hello_world_vm"
-    sensitive = true
+  type        = string
+  description = "Username for hello_world_vm"
+  sensitive   = true
 }
 
 variable "hello_world_vm_ssh_public_key" {
-    type = string
-    description = "Public Key for hello_world_vm"
+  type        = string
+  description = "Public Key for hello_world_vm"
+}
+
+variable "ssh_whitelist_ip" {
+  type        = string
+  description = "IP address with permission to ssh the VM"
 }

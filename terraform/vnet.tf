@@ -31,3 +31,28 @@ resource "azurerm_network_interface" "example" {
     public_ip_address_id          = azurerm_public_ip.hello_web.id
   }
 }
+
+resource "azurerm_network_security_group" "hello_vm" {
+  name                = "hello-vm-security-group"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+}
+
+resource "azurerm_network_security_rule" "ssh_rule" {
+  name                        = "SSH-Rule"
+  priority                    = 100
+  direction                   = "Inbound"
+  access                      = "Allow"
+  protocol                    = "Tcp"
+  source_address_prefix       = var.ssh_whitelist_ip
+  source_port_range           = "*"
+  destination_address_prefix  = "*"
+  destination_port_range      = "22"
+  resource_group_name         = azurerm_resource_group.rg.name
+  network_security_group_name = azurerm_network_security_group.hello_vm.name
+}
+
+resource "azurerm_network_interface_security_group_association" "example" {
+  network_interface_id      = azurerm_network_interface.example.id
+  network_security_group_id = azurerm_network_security_group.hello_vm.id
+}
