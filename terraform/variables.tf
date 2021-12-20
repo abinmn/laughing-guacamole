@@ -21,6 +21,12 @@ variable "hello_world_image_name" {
   default     = "hello-world"
 }
 
+variable "vm_image_rg_name" {
+  type = string
+  description = "Resource Group name for images"
+  default = "rg-hello-world-images"
+}
+
 variable "hello_world_vm_username" {
   type        = string
   description = "Username for hello_world_vm"
