@@ -27,7 +27,6 @@
       "task": "Image deployment"
     },
 
-    "custom_data_file": "cloud_init.yml",
 
     "location": "North Europe",
     "vm_size": "Standard_B1s"
@@ -36,14 +35,18 @@
 
       {
         "type": "file",
-        "source": "../hello-world-springboot-application",
-        "destination": "/tmp"
+        "sources": [
+          "../hello-world-springboot-application",
+          "app.service"
+        ],
+        "destination": "/tmp/"
       },
       {
         "execute_command": "chmod +x {{ .Path }}; {{ .Vars }} sudo -E sh '{{ .Path }}'",
         "scripts": [
           "./install_packages.sh",
-          "./build.sh"
+          "./build.sh",
+          "./deploy.sh"
         ],
         "type": "shell"
       }
