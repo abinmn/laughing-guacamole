@@ -1,54 +1,55 @@
-{
-  "variables": {
-    "client_id":  "{{env `CLIENT_ID`}}",
-    "client_secret":  "{{env `CLIENT_SECRET`}}",
-    "tenant_id":  "{{env `TENANT_ID`}}",
-    "subscription_id":  "{{env `SUBSCRIPTION_ID`}}",
-    "resource_group_name": "{{env `RESOURCE_GROUP_NAME`}}"
-  },
-  "builders": [{
-    "type": "azure-arm",
-
-    "client_id": "{{user `client_id`}}",
-    "client_secret": "{{user `client_secret`}}",
-    "tenant_id": "{{user `tenant_id`}}",
-    "subscription_id": "{{user `subscription_id`}}",
-
-    "managed_image_resource_group_name": "{{user `resource_group_name`}}",
-    "managed_image_name": "hello-world",
-
-    "os_type": "Linux",
-    "image_publisher": "Canonical",
-    "image_offer": "UbuntuServer",
-    "image_sku": "16.04-LTS",
-
-    "azure_tags": {
-      "dept": "Engineering",
-      "task": "Image deployment"
+  {
+    "variables": {
+      "client_id":  "{{env `CLIENT_ID`}}",
+      "client_secret":  "{{env `CLIENT_SECRET`}}",
+      "tenant_id":  "{{env `TENANT_ID`}}",
+      "subscription_id":  "{{env `SUBSCRIPTION_ID`}}",
+      "resource_group_name": "{{env `RESOURCE_GROUP_NAME`}}",
+      "target_image_name": "{{env `TARGET_IMAGE_NAME`}}"
     },
+    "builders": [{
+      "type": "azure-arm",
 
+      "client_id": "{{user `client_id`}}",
+      "client_secret": "{{user `client_secret`}}",
+      "tenant_id": "{{user `tenant_id`}}",
+      "subscription_id": "{{user `subscription_id`}}",
 
-    "location": "North Europe",
-    "vm_size": "Standard_B1s"
-  }],
-  "provisioners": [
+      "managed_image_resource_group_name": "{{user `resource_group_name`}}",
+      "managed_image_name": "{{user `target_image_name`}}",
 
-      {
-        "type": "file",
-        "sources": [
-          "../hello-world-springboot-application",
-          "app.service"
-        ],
-        "destination": "/tmp/"
+      "os_type": "Linux",
+      "image_publisher": "Canonical",
+      "image_offer": "UbuntuServer",
+      "image_sku": "16.04-LTS",
+
+      "azure_tags": {
+        "dept": "Engineering",
+        "task": "Image deployment"
       },
-      {
-        "execute_command": "chmod +x {{ .Path }}; {{ .Vars }} sudo -E sh '{{ .Path }}'",
-        "scripts": [
-          "./install_packages.sh",
-          "./build.sh",
-          "./deploy.sh"
-        ],
-        "type": "shell"
-      }
-  ]
-}
+
+
+      "location": "North Europe",
+      "vm_size": "Standard_B1s"
+    }],
+    "provisioners": [
+
+        {
+          "type": "file",
+          "sources": [
+            "../../hello-world-springboot-application",
+            "app.service"
+          ],
+          "destination": "/tmp/"
+        },
+        {
+          "execute_command": "chmod +x {{ .Path }}; {{ .Vars }} sudo -E sh '{{ .Path }}'",
+          "scripts": [
+            "./install_packages.sh",
+            "./build.sh",
+            "./deploy.sh"
+          ],
+          "type": "shell"
+        }
+    ]
+  }

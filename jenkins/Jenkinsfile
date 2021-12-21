@@ -1,0 +1,29 @@
+pipeline {
+    agent any
+
+    environment {
+        CLIENT_ID = credentials('azure-client-id')
+        CLIENT_SECRET = credentials('azure-client-secret')
+        TENANT_ID = credentials('azure-tenant-id')
+        SUBSCRIPTION_ID = credentials('azure-subscription-id')
+        RESOURCE_GROUP_NAME = "rg-hello-world-images"
+    }
+
+    stages {
+        stage('Packer - build hello-world app Azure VM image') {
+            steps {
+                checkout scm
+
+                script {
+                    env.TARGET_IMAGE_NAME = "hello-world-${GIT_COMMIT[0..7]}"
+                }
+
+                sh """
+                #!/bin/sh
+                cd packer/hello_world_vm
+                packer build hello-world-azure-ubuntu.json
+                """
+            }
+        }
+    }
+}
