@@ -2,10 +2,10 @@ pipeline {
     agent any
 
     environment {
-        CLIENT_ID = credentials('azure-client-id')
-        CLIENT_SECRET = credentials('azure-client-secret')
-        TENANT_ID = credentials('azure-tenant-id')
-        SUBSCRIPTION_ID = credentials('azure-subscription-id')
+        ARM_CLIENT_ID = credentials('azure-client-id')
+        ARM_CLIENT_SECRET = credentials('azure-client-secret')
+        ARM_TENANT_ID = credentials('azure-tenant-id')
+        ARM_SUBSCRIPTION_ID = credentials('azure-subscription-id')
         RESOURCE_GROUP_NAME = "rg-hello-world-images"
     }
 
@@ -22,6 +22,26 @@ pipeline {
                 #!/bin/sh
                 cd packer/hello_world_vm
                 packer build hello-world-azure-ubuntu.json
+                """
+            }
+        }
+
+        stage('Deploy VM Image') {
+            environment {
+                TF_VAR_hello_world_vm_username = credentials('hello_world_ssh_username')
+                TF_VAR_hello_world_vm_ssh_public_key = credentials('hello_world_vm_ssh_public_key')
+                TF_VAR_ssh_whitelist_ip = credentials('ssh_whitelist_ip')
+                TF_VAR_resource_group_name = "hello-world"
+            }
+            steps {
+                checkout scm
+                sh"""
+                #!/bin/sh
+                
+                TF_VAR_hello_world_image_name=${env.TARGET_IMAGE_NAME}
+                cd terraform
+                terraform init
+                terraform apply -auto-approve
                 """
             }
         }
