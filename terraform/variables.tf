@@ -22,9 +22,9 @@ variable "hello_world_image_name" {
 }
 
 variable "vm_image_rg_name" {
-  type = string
+  type        = string
   description = "Resource Group name for images"
-  default = "rg-hello-world-images"
+  default     = "rg-hello-world-images"
 }
 
 variable "hello_world_vm_username" {
